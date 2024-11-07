@@ -1,4 +1,4 @@
-streamlit
-pydantic
-python-dotenv
-langchain-openai
+langchain-openai==0.2.6
+pydantic==2.9.2
+python-dotenv==1.0.1
+streamlit==1.40.0
