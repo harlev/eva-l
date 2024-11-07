@@ -12,6 +12,10 @@ class LLMInterface(ABC):
     @abstractmethod
     def generate(self, messages: list[BaseMessage], model: str = "gpt-4o-mini") -> str:
         pass
+    
+    @abstractmethod
+    def generate_structured(self, messages: list[BaseMessage], pydantic_object: BaseModel, model: str = "gpt-4o-mini") -> str:
+        pass
 
 class OpenAILLM(LLMInterface):
     def generate(self, messages: list[BaseMessage], model: str = "gpt-4o-mini") -> str:
