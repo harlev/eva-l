@@ -38,12 +38,12 @@ class MockLLM(LLMInterface):
         return pydantic_object(**{field: f"Mock {field} content" for field in fields})
 
 if __name__ == "__main__":
-    messages = [
-        SystemMessage(content="Translate the following from English into Italian"),
-        HumanMessage(content="hi!"),
-    ]
-    llm = OpenAILLM()
-    print(llm.generate(messages))
+    # messages = [
+    #     SystemMessage(content="Translate the following from English into Italian"),
+    #     HumanMessage(content="hi!"),
+    # ]
+    # llm = OpenAILLM()
+    # print(llm.generate(messages))
     
     class Joke(BaseModel):
         setup: str
@@ -53,7 +53,7 @@ if __name__ == "__main__":
         HumanMessage(content="Tell me a joke about cats"),
     ]
 
-    print(llm.generate_structured(messages, Joke))
+    # print(llm.generate_structured(messages, Joke))
 
     llm = MockLLM()
     print(llm.generate(messages))
