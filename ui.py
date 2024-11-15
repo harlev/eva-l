@@ -14,19 +14,19 @@ if 'data' not in st.session_state:
 with st.expander("Variable Settings"):
     tab1, tab2 = st.tabs(["Variable Management", "Upload Data"])
 
-with tab1:
-    # Column management section
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        new_column = st.text_input("", placeholder="New variable name", label_visibility="collapsed")
-    with col2:
-        if st.button("Add Variable"):
-            if new_column and new_column not in st.session_state.columns:
-                st.session_state.columns.append(new_column)
-                # Add empty values for new column to existing rows
-                for row in st.session_state.data:
-                    row.append("")
-                st.rerun()
+    with tab1:
+        # Column management section
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            new_column = st.text_input("", placeholder="New variable name", label_visibility="collapsed")
+        with col2:
+            if st.button("Add Variable"):
+                if new_column and new_column not in st.session_state.columns:
+                    st.session_state.columns.append(new_column)
+                    # Add empty values for new column to existing rows
+                    for row in st.session_state.data:
+                        row.append("")
+                    st.rerun()
 
     # Display current columns and allow deletion
     if st.session_state.columns:
