@@ -1,4 +1,6 @@
 import streamlit as st
+import pandas as pd
+
 
 model = st.multiselect("Select models", ["gpt-4o-mini", "gpt-4o"])
 
@@ -18,7 +20,7 @@ with st.expander("Variable Settings"):
         # Column management section
         col1, col2 = st.columns([3, 1])
         with col1:
-            new_column = st.text_input("", placeholder="New variable name", label_visibility="collapsed")
+            new_column = st.text_input("v", placeholder="New variable name", label_visibility="collapsed")
         with col2:
             if st.button("Add Variable"):
                 if new_column and new_column not in st.session_state.columns:
@@ -42,17 +44,12 @@ with st.expander("Variable Settings"):
 
     with tab2:
         # CSV upload section
-        uploaded_file = st.file_uploader("Upload CSV file", type=['csv'])
+        uploaded_file = st.file_uploader("Upload CSV file", type="csv")
         if uploaded_file is not None:
-            import pandas as pd
             try:
                 df = pd.read_csv(uploaded_file)
-                # Update columns
-                st.session_state.columns = list(df.columns)
-                # Update data
-                st.session_state.data = df.values.tolist()
+                edited_df = st.data_editor(df, num_rows="dynamic")
                 st.success("CSV file uploaded successfully!")
-                st.rerun()
             except Exception as e:
                 st.error(f"Error reading CSV file: {str(e)}")
 
