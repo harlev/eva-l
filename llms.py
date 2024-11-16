@@ -5,6 +5,7 @@ from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
 from langchain_core.output_parsers import StrOutputParser
 from abc import ABC, abstractmethod
 from pydantic import BaseModel
+import time
 
 load_dotenv()
 
@@ -31,6 +32,7 @@ class OpenAILLM(LLMInterface):
 
 class MockLLM(LLMInterface):
     def generate(self, messages: list[BaseMessage], model: str = "gpt-4o-mini") -> str:
+        time.sleep(2)
         return f"Mock response: {messages}"
     
     def generate_structured(self, messages: list[BaseMessage], pydantic_object: BaseModel, model: str = "gpt-4o-mini") -> str:
