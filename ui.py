@@ -44,9 +44,16 @@ if st.button("Run"):
     for current_model in selected_models:
         print(current_model)
         prompt_template = PromptTemplate.from_template(prompt)
-        formatted_prompt = prompt_template.format()
-        messages = [HumanMessage(content=formatted_prompt)]
-        result = MockLLM().generate(messages=messages, model=current_model)
-        print(result)
+        df = st.session_state.edited_df
+        
+        for index, row in df.iterrows():
+            # Format prompt with all column values from the row
+            # Extract only the variables mentioned in the prompt template
+            template_variables = prompt_template.input_variables
+            row_dict = {k: v for k, v in row.to_dict().items()}
+            formatted_prompt = prompt_template.format(**row_dict)
+            messages = [HumanMessage(content=formatted_prompt)]
+            result = MockLLM().generate(messages=messages, model=current_model)
+            print(f"Row {index}: {result}")
 
 
