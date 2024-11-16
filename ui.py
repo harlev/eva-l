@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 import time
 
+from llms import MockLLM
+from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
+from langchain_core.prompts import PromptTemplate
+
 def message(container, message, icon=None):
     # Display the success message in the container
     container.success(message, icon=icon)
@@ -12,9 +16,9 @@ def message(container, message, icon=None):
     # Clear the container, effectively hiding the success message
     container.empty()
 
-model = st.multiselect("Select models", ["gpt-4o-mini", "gpt-4o"])
+selected_models = st.multiselect("Select models", ["gpt-4o-mini", "gpt-4o"])
 
-prompt = st.text_area("Enter a prompt")
+prompt = st.text_area("Enter a prompt", placeholder="What is the capital of {country}")
 
 @st.cache_data
 def process_csv(file):
@@ -35,6 +39,14 @@ with st.expander("Variable Settings"):
 
 
 if st.button("Run"):
-    st.dataframe(st.session_state.edited_df)
+    # st.dataframe(st.session_state.edited_df)
+
+    for current_model in selected_models:
+        print(current_model)
+        prompt_template = PromptTemplate.from_template(prompt)
+        formatted_prompt = prompt_template.format()
+        messages = [HumanMessage(content=formatted_prompt)]
+        result = MockLLM().generate(messages=messages, model=current_model)
+        print(result)
 
 

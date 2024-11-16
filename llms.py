@@ -31,7 +31,7 @@ class OpenAILLM(LLMInterface):
 
 class MockLLM(LLMInterface):
     def generate(self, messages: list[BaseMessage], model: str = "gpt-4o-mini") -> str:
-        return "Mock response"
+        return f"Mock response: {messages}"
     
     def generate_structured(self, messages: list[BaseMessage], pydantic_object: BaseModel, model: str = "gpt-4o-mini") -> str:
         fields = pydantic_object.model_fields.keys()
