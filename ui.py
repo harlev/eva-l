@@ -41,26 +41,31 @@ with st.expander("Variable Settings", expanded=st.session_state.variables_expand
         st.session_state.edited_df = st.data_editor(df, num_rows="dynamic")
 
 
-if st.button("Run"):
-    with st.spinner("Running models..."):
-        st.session_state.variables_expanded = False
+def generate(selected_models, prompt, variables_df):
+    results_data = []
+    prompt_template = PromptTemplate.from_template(prompt)
 
-        results_data = []
-        prompt_template = PromptTemplate.from_template(prompt)
-        df = st.session_state.edited_df
-
-        for current_model in selected_models:
-            for index, row in df.iterrows():
-                row_dict = {k: v for k, v in row.to_dict().items()}
-                formatted_prompt = prompt_template.format(**row_dict)
-                messages = [HumanMessage(content=formatted_prompt)]
-                result = MockLLM().generate(messages=messages, model=current_model)
+    for current_model in selected_models:
+        for index, row in variables_df.iterrows():
+            row_dict = {k: v for k, v in row.to_dict().items()}
+            formatted_prompt = prompt_template.format(**row_dict)
+            messages = [HumanMessage(content=formatted_prompt)]
+            result = MockLLM().generate(messages=messages, model=current_model)
                 
-                results_data.append({
+            results_data.append({
                     "Model": current_model,
                     "Input": formatted_prompt,
                     "Output": result
                 })
+            
+    return results_data
+
+if st.button("Run"):
+    with st.spinner("Running models..."):
+        st.session_state.variables_expanded = False
+        df = st.session_state.edited_df
+
+        results_data = generate(selected_models, prompt, df)
         
         results_df = pd.DataFrame(results_data)
         st.dataframe(results_df)
