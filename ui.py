@@ -2,9 +2,8 @@ import streamlit as st
 import pandas as pd
 import time
 
-from llms import MockLLM
-from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
-from langchain_core.prompts import PromptTemplate
+from evals import generate
+
 
 if "variables_expanded" not in st.session_state:
     st.session_state["variables_expanded"] = False
@@ -40,25 +39,6 @@ with st.expander("Variable Settings", expanded=st.session_state.variables_expand
         df = process_csv(uploaded_file)
         st.session_state.edited_df = st.data_editor(df, num_rows="dynamic")
 
-
-def generate(selected_models, prompt, variables_df):
-    results_data = []
-    prompt_template = PromptTemplate.from_template(prompt)
-
-    for current_model in selected_models:
-        for index, row in variables_df.iterrows():
-            row_dict = {k: v for k, v in row.to_dict().items()}
-            formatted_prompt = prompt_template.format(**row_dict)
-            messages = [HumanMessage(content=formatted_prompt)]
-            result = MockLLM().generate(messages=messages, model=current_model)
-                
-            results_data.append({
-                    "Model": current_model,
-                    "Input": formatted_prompt,
-                    "Output": result
-                })
-            
-    return results_data
 
 if st.button("Run"):
     with st.spinner("Running models..."):
