@@ -1,9 +1,11 @@
 from langchain_core.prompts import PromptTemplate
+from abc import ABC, abstractmethod
+from eval_types import EvalScoreInterface, Evaluation
 from llms import MockLLM
 from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
 
 
-def generate(selected_models, prompt, variables_df):
+def generate(selected_models, prompt, variables_df, eval: EvalScoreInterface, expected_column: str = "expected_output"):
     results_data = []
     prompt_template = PromptTemplate.from_template(prompt)
 
@@ -13,11 +15,26 @@ def generate(selected_models, prompt, variables_df):
             formatted_prompt = prompt_template.format(**row_dict)
             messages = [HumanMessage(content=formatted_prompt)]
             result = MockLLM().generate(messages=messages, model=current_model)
+            
+            # Get expected output from variables dataframe using the provided column name
+            expected_output = row_dict.get(expected_column, "")
+            
+            # Create evaluation and score it
+            evaluation = Evaluation(
+                input=formatted_prompt,
+                output=result,
+                expected_output=expected_output,
+                score=0.0
+            )
+            
+            eval_result = eval.score(evaluation, r"^{expected}$")
                 
             results_data.append({
-                    "Model": current_model,
-                    "Input": formatted_prompt,
-                    "Output": result
-                })
+                "Model": current_model,
+                "Input": formatted_prompt,
+                "Output": result,
+                "Expected": expected_output,
+                "Score": eval_result.score
+            })
             
     return results_data

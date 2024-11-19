@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 
+from eval_types import RegexEvalScore
 from evals import generate
 
 
@@ -38,6 +39,14 @@ with st.expander("Variable Settings", expanded=st.session_state.variables_expand
     if uploaded_file is not None:
         df = process_csv(uploaded_file)
         st.session_state.edited_df = st.data_editor(df, num_rows="dynamic")
+        
+        # Add column selector for expected results
+        columns = df.columns.tolist()
+        st.selectbox(
+            "Select column containing expected results",
+            columns,
+            key="expected_column"
+        )
 
 
 if st.button("Run"):
@@ -45,7 +54,7 @@ if st.button("Run"):
         st.session_state.variables_expanded = False
         df = st.session_state.edited_df
 
-        results_data = generate(selected_models, prompt, df)
+        results_data = generate(selected_models, prompt, df, eval=RegexEvalScore(), expected_column=st.session_state.expected_column)
         
         results_df = pd.DataFrame(results_data)
         st.dataframe(results_df)
