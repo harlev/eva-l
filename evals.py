@@ -19,10 +19,8 @@ def generate(selected_models,
             messages = [HumanMessage(content=formatted_prompt)]
             result = OpenAILLM().generate(messages=messages, model=current_model)
             
-            # Get expected output from variables dataframe using the provided column name
             expected_output = row_dict.get(expected_column, "")
             
-            # Create evaluation and score it
             evaluation = Evaluation(
                 input=formatted_prompt,
                 output=result,

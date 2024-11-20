@@ -8,13 +8,8 @@ from evals import generate
 
 
 def message(container, message, icon=None):
-    # Display the success message in the container
     container.success(message, icon=icon)
-
-    # Wait for a few seconds
     time.sleep(3)
-
-    # Clear the container, effectively hiding the success message
     container.empty()
 
 selected_models = st.multiselect("Select models", ["gpt-4o-mini", "gpt-4o"])
@@ -32,13 +27,11 @@ def process_csv(file):
         st.error(f"Error reading CSV file: {str(e)}")
 
 with st.expander("Variable Settings"):
-    # CSV upload section
     uploaded_file = st.file_uploader("Upload variable CSV file", type="csv")
     if uploaded_file is not None:
         df = process_csv(uploaded_file)
         st.session_state.edited_df = st.data_editor(df, num_rows="dynamic")
         
-        # Add column selector for expected results
         columns = df.columns.tolist()
         st.selectbox(
             "Select column containing expected results",

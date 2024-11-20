@@ -29,7 +29,6 @@ class RegexEvalScore(EvalScoreInterface):
         self.flags = flags
 
     def score(self, evaluation: Evaluation) -> EvalResult:
-        # Inject the expected value into the rule template
         rule_with_expected = self.rule.format(expected=evaluation.expected_output)
         
         pattern = re.compile(rule_with_expected, self.flags)
