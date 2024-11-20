@@ -1,3 +1,4 @@
+import re
 import streamlit as st
 import pandas as pd
 import time
@@ -47,6 +48,8 @@ with st.expander("Variable Settings", expanded=st.session_state.variables_expand
             columns,
             key="expected_column"
         )
+        regex_rule = st.text_input("Regex rule", value=r"^.*{expected}.*$")
+        regex_flags = sum((getattr(re, flag) for flag in st.multiselect("Regex flags", ["IGNORECASE"], default=["IGNORECASE"])), 0)
 
 
 if st.button("Run"):
@@ -54,7 +57,8 @@ if st.button("Run"):
         st.session_state.variables_expanded = False
         df = st.session_state.edited_df
 
-        results_data = generate(selected_models, prompt, df, eval=RegexEvalScore(), expected_column=st.session_state.expected_column)
+        eval = RegexEvalScore(rule=regex_rule, flags=regex_flags)
+        results_data = generate(selected_models, prompt, df, eval, expected_column=st.session_state.expected_column)
         
         results_df = pd.DataFrame(results_data)
         st.dataframe(results_df)

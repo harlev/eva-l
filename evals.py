@@ -1,7 +1,7 @@
 from langchain_core.prompts import PromptTemplate
 from abc import ABC, abstractmethod
 from eval_types import EvalScoreInterface, Evaluation
-from llms import MockLLM
+from llms import MockLLM, OpenAILLM
 from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
 
 
@@ -17,7 +17,7 @@ def generate(selected_models,
             row_dict = {k: v for k, v in row.to_dict().items()}
             formatted_prompt = prompt_template.format(**row_dict)
             messages = [HumanMessage(content=formatted_prompt)]
-            result = MockLLM().generate(messages=messages, model=current_model)
+            result = OpenAILLM().generate(messages=messages, model=current_model)
             
             # Get expected output from variables dataframe using the provided column name
             expected_output = row_dict.get(expected_column, "")
@@ -30,7 +30,7 @@ def generate(selected_models,
                 score=0.0
             )
             
-            eval_result = eval.score(evaluation, r"^{expected}$")
+            eval_result = eval.score(evaluation)
                 
             results_data.append({
                 "Model": current_model,
