@@ -5,7 +5,10 @@ from llms import MockLLM
 from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
 
 
-def generate(selected_models, prompt, variables_df, eval: EvalScoreInterface, expected_column: str = "expected_output"):
+def generate(selected_models, 
+             prompt, variables_df,
+             eval: EvalScoreInterface,
+             expected_column: str = "expected_output") -> list[dict]:
     results_data = []
     prompt_template = PromptTemplate.from_template(prompt)
 
