@@ -8,7 +8,8 @@ from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
 def generate(selected_models, 
              prompt, variables_df,
              eval: EvalScoreInterface,
-             expected_column: str = "expected_output") -> list[dict]:
+             expected_column: str = "expected_output",
+             api_key: str = None) -> list[dict]:
     results_data = []
     prompt_template = PromptTemplate.from_template(prompt)
 
@@ -17,7 +18,7 @@ def generate(selected_models,
             row_dict = {k: v for k, v in row.to_dict().items()}
             formatted_prompt = prompt_template.format(**row_dict)
             messages = [HumanMessage(content=formatted_prompt)]
-            result = OpenAILLM().generate(messages=messages, model=current_model)
+            result = OpenAILLM().generate(messages=messages, model=current_model, api_key=api_key)
             
             expected_output = row_dict.get(expected_column, "")
             

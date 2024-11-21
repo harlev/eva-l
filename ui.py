@@ -2,17 +2,42 @@ import re
 import streamlit as st
 import pandas as pd
 import time
+import os
 
 from eval_types import RegexEvalScore
 from evals import generate
 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def message(container, message, icon=None):
     container.success(message, icon=icon)
     time.sleep(3)
     container.empty()
 
-selected_models = st.multiselect("Select models", ["gpt-4o-mini", "gpt-4o"])
+
+if "openai_api_key" not in st.session_state and os.getenv('OPENAI_API_KEY'):
+    st.session_state.openai_api_key = os.getenv('OPENAI_API_KEY')
+
+@st.dialog("API Keys")
+def get_api_key():
+    api_key = st.text_input('Enter your OpenAI API key:', 
+                           type='password', 
+                           value=st.session_state.get("openai_api_key", ""),
+                           key="api_key")
+    if st.button("Save"):
+        st.session_state.openai_api_key = api_key
+        st.rerun()
+
+
+
+col1, col2 = st.columns([5,1])
+with col1:
+    selected_models = st.multiselect("Select models", ["gpt-4o-mini", "gpt-4o"], placeholder="Select models", label_visibility="collapsed")
+with col2:
+    if st.button("Set API 🔑"):
+        get_api_key()
 
 prompt = st.text_area("Enter a prompt", placeholder="Prompt with {variables} here")
 
@@ -45,13 +70,17 @@ with st.expander("Evaluation Settings"):
 
 
 if st.button("Run"):
-    with st.spinner("Running models..."):
-        df = st.session_state.edited_df
+    if 'openai_api_key' not in st.session_state:
+        st.error('Please enter your OpenAI API key first')
+    else:
+        with st.spinner("Running models..."):
+            df = st.session_state.edited_df
 
-        eval = RegexEvalScore(rule=regex_rule, flags=regex_flags)
-        results_data = generate(selected_models, prompt, df, eval, expected_column=st.session_state.expected_column)
-        
-        results_df = pd.DataFrame(results_data)
-        st.dataframe(results_df)
-
+            eval = RegexEvalScore(rule=regex_rule, flags=regex_flags)
+            results_data = generate(selected_models, prompt, df, eval, 
+                                expected_column=st.session_state.expected_column,
+                                api_key=st.session_state.openai_api_key)
+            
+            results_df = pd.DataFrame(results_data)
+            st.dataframe(results_df)
 
