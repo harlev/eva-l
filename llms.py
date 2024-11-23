@@ -11,6 +11,13 @@ import os
 load_dotenv()
 
 
+MODEL_NAMES = ["gpt-4o-mini-2024-07-18",
+               "gpt-4o-2024-11-20",
+               "gpt-4o-2024-08-06",
+               "gpt-4o-2024-05-13",
+               "chatgpt-4o-latest"]
+
+
 class LLMInterface(ABC):
     @abstractmethod
     def generate(self, messages: list[BaseMessage], model: str = "gpt-4o-mini", api_key: str = None) -> str:

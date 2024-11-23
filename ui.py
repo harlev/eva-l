@@ -6,7 +6,7 @@ import os
 
 from eval_types import RegexEvalScore
 from evals import generate
-
+from llms import MODEL_NAMES
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -25,7 +25,8 @@ def get_api_key():
     api_key = st.text_input('Enter your OpenAI API key:', 
                            type='password', 
                            value=st.session_state.get("openai_api_key", ""),
-                           key="api_key")
+                           key="api_key",
+                           help="Keys are never stored, only used for this session")
     if st.button("Save"):
         st.session_state.openai_api_key = api_key
         st.rerun()
@@ -34,7 +35,7 @@ def get_api_key():
 
 col1, col2 = st.columns([5,1])
 with col1:
-    selected_models = st.multiselect("Select models", ["gpt-4o-mini", "gpt-4o"], placeholder="Select models", label_visibility="collapsed")
+    selected_models = st.multiselect("Select models", MODEL_NAMES, placeholder="Select models", label_visibility="collapsed")
 with col2:
     if st.button("Set API 🔑"):
         get_api_key()
