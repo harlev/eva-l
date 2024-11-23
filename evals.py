@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from eval_types import EvalScoreInterface, Evaluation
 from llms import MockLLM, OpenAILLM
 from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
+from logger import logger
 
 def _process_single_row(row_dict, prompt_template, current_model, eval, expected_column, api_key):
         formatted_prompt = prompt_template.format(**row_dict)
@@ -53,5 +54,5 @@ def generate(selected_models,
             result = future.result()
             results_data.append(result)
     
-    print(results_data)
+    logger.info(results_data)
     return results_data

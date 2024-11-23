@@ -8,8 +8,12 @@ from eval_types import RegexEvalScore
 from evals import generate
 from llms import MODEL_NAMES
 from dotenv import load_dotenv
+from logger import logger
 
 load_dotenv()
+
+logger.info("App started")
+
 
 def message(container, message, icon=None):
     container.success(message, icon=icon)
