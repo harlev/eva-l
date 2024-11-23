@@ -52,5 +52,6 @@ def generate(selected_models,
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
             results_data.append(result)
-            
+    
+    print(results_data)
     return results_data
