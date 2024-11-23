@@ -14,6 +14,12 @@ load_dotenv()
 
 logger.info("App started")
 
+st.set_page_config(
+        page_title="Eva-L LLM Evals",
+        page_icon="⚖️",
+        # layout="wide",
+    )
+
 
 def message(container, message, icon=None):
     container.success(message, icon=icon)
