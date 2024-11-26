@@ -1,6 +1,8 @@
 # eva-l
 LLM Evaluation Framework
 
+Try the [demo](https://llm-eva-l.streamlit.app/)
+
 ### Currently implemented
 - [x] Open AI model selection
 - [x] Prompt definition with template variables
