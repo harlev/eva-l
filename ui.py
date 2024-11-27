@@ -12,8 +12,6 @@ from logger import logger
 
 load_dotenv()
 
-logger.info("App started")
-
 st.set_page_config(
         page_title="Eva-L LLM Evals",
         page_icon="⚖️",
@@ -46,6 +44,8 @@ def get_api_key():
 col1, col2 = st.columns([5,1])
 with col1:
     selected_models = st.multiselect("Select models", MODEL_NAMES, placeholder="Select models", label_visibility="collapsed")
+    if selected_models:
+        logger.info(f"Selected models: {selected_models}")
 with col2:
     if st.button("Set API 🔑"):
         get_api_key()
