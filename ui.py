@@ -42,7 +42,7 @@ def get_api_key():
 
 col1, col2 = st.columns([5,1])
 with col1:
-    selected_models = st.multiselect("Select models", list_openai_models(), placeholder="Select models", label_visibility="collapsed")
+    selected_models = st.multiselect("Select models", list_openai_models(st.session_state.openai_api_key), placeholder="Select models", label_visibility="collapsed")
     if selected_models:
         logger.info(f"Selected models: {selected_models}")
 with col2:
