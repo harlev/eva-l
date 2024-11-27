@@ -6,10 +6,9 @@ import os
 
 from eval_types import RegexEvalScore
 from evals import generate
-from llms import MODEL_NAMES
 from dotenv import load_dotenv
 from logger import logger
-
+from openai_models import list_openai_models
 load_dotenv()
 
 st.set_page_config(
@@ -43,7 +42,7 @@ def get_api_key():
 
 col1, col2 = st.columns([5,1])
 with col1:
-    selected_models = st.multiselect("Select models", MODEL_NAMES, placeholder="Select models", label_visibility="collapsed")
+    selected_models = st.multiselect("Select models", list_openai_models(), placeholder="Select models", label_visibility="collapsed")
     if selected_models:
         logger.info(f"Selected models: {selected_models}")
 with col2:

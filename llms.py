@@ -7,15 +7,9 @@ from abc import ABC, abstractmethod
 from pydantic import BaseModel
 import time
 import os
+from openai_models import list_openai_models
 
 load_dotenv()
-
-
-MODEL_NAMES = ["gpt-4o-mini-2024-07-18",
-               "gpt-4o-2024-11-20",
-               "gpt-4o-2024-08-06",
-               "gpt-4o-2024-05-13",
-               "chatgpt-4o-latest"]
 
 
 class LLMInterface(ABC):
